@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-#if LOCAL_NOTI_ENABLE
+#if LOCAL_NOTI_MODULE_ENABLE
 //! 로컬 알림 관리자
 public class CLocalNotiManager : CSingleton<CLocalNotiManager> {
 	#region 변수
@@ -26,4 +26,4 @@ public class CLocalNotiManager : CSingleton<CLocalNotiManager> {
 	}
 	#endregion			// 함수
 }
-#endif			// #if LOCAL_NOTI_ENABLE
+#endif			// #if LOCAL_NOTI_MODULE_ENABLE
