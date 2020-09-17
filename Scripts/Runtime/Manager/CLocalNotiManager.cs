@@ -18,10 +18,12 @@ public class CLocalNotiManager : CSingleton<CLocalNotiManager> {
 	public virtual void Init(System.Action<CLocalNotiManager, bool> a_oCallback) {
 		CFunc.ShowLog("CLocalNotiManager.Init", KCDefine.B_LOG_COLOR_PLUGIN);
 
+#if UNITY_IOS || UNITY_ANDROID
 		// 초기화 가능 할 경우
-		if(!this.IsInit && (CAccess.IsEditorPlatform() || CAccess.IsMobilePlatform())) {
+		if(!this.IsInit && CAccess.IsMobilePlatform()) {
 			this.IsInit = true;
 		}
+#endif			// #if UNITY_IOS || UNITY_ANDROID
 
 		a_oCallback?.Invoke(this, this.IsInit);
 	}
