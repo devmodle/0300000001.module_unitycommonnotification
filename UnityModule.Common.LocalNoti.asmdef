@@ -6,7 +6,9 @@
         "UnityModule.Common.Extension",
         "UnityModule.Common.Func",
         "UnityModule.Common.Utility",
-        "MessagePack"
+        "MessagePack",
+        "Unity.Notifications.iOS",
+        "Unity.Notifications.Android"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
