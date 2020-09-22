@@ -49,7 +49,7 @@ public class CLocalNotiManager : CSingleton<CLocalNotiManager> {
 			float fDeltaTime = KCDefine.U_DELTA_TIME_LOCAL_NM_REQUEST_CHECK;
 			float fMaxDeltaTime = KCDefine.U_MAX_DELTA_TIME_LOCAL_NM_REQUEST_CHECK;
 
-			CFunc.RepeatCallFunc(this, fDeltaTime, fMaxDeltaTime, (a_oComponent, a_oParams, a_bIsComplete) => {
+			this.ExRepeatCallFunc(fDeltaTime, fMaxDeltaTime, (a_oComponent, a_oParams, a_bIsComplete) => {
 				// 요청이 완료 되었을 경우
 				if(a_bIsComplete) {
 					this.OnInit();
@@ -74,12 +74,12 @@ public class CLocalNotiManager : CSingleton<CLocalNotiManager> {
 #if UNITY_IOS
 			var oNoti = new iOSNotification() {
 				Identifier = a_oKey,
-				Title = a_oTitle,
-				Body = a_oMsg
+				Title = a_stNotiInfo.m_oTitle,
+				Body = a_stNotiInfo.m_oMsg
 			};
 
 			iOSNotificationCenter.ScheduleNotification(oNoti);
-#else
+#elif UNITY_ANDROID
 			var oNoti = new AndroidNotification(a_stNotiInfo.m_oTitle, 
 				a_stNotiInfo.m_oMsg, a_stNotiInfo.m_stNotiTime);
 				
@@ -97,7 +97,7 @@ public class CLocalNotiManager : CSingleton<CLocalNotiManager> {
 #if UNITY_IOS
 			iOSNotificationCenter.RemoveScheduledNotification(a_oKey);
 			iOSNotificationCenter.RemoveDeliveredNotification(a_oKey);
-#else
+#elif UNITY_ANDROID
 			CAccess.Assert(int.TryParse(a_oKey, out int nID));
 
 			AndroidNotificationCenter.CancelNotification(nID);
