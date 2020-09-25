@@ -38,7 +38,7 @@ public class CLocalNotiManager : CSingleton<CLocalNotiManager> {
 		CFunc.ShowLog("CLocalNotiManager.Init", KCDefine.B_LOG_COLOR_PLUGIN);
 
 		// 초기화가 필요 없을 경우
-		if(this.IsInit || !CAccess.IsMobilePlatform()) {
+		if(this.IsInit || !CAccess.IsMobile()) {
 			a_oCallback?.Invoke(this, this.IsInit);
 		} else {
 			m_oInitCallback = a_oCallback;
