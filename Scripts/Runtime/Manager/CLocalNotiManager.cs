@@ -98,7 +98,8 @@ public class CLocalNotiManager : CSingleton<CLocalNotiManager> {
 			iOSNotificationCenter.RemoveScheduledNotification(a_oKey);
 			iOSNotificationCenter.RemoveDeliveredNotification(a_oKey);
 #elif UNITY_ANDROID
-			CAccess.Assert(int.TryParse(a_oKey, out int nID));
+			int nID = 0;
+			CAccess.Assert(int.TryParse(a_oKey, out nID));
 
 			AndroidNotificationCenter.CancelNotification(nID);
 			AndroidNotificationCenter.CancelScheduledNotification(nID);
