@@ -37,7 +37,7 @@ public class CLocalNotiManager : CSingleton<CLocalNotiManager> {
 	public virtual void Init(STParams a_stParams, System.Action<CLocalNotiManager, bool> a_oCallback) {
 		CFunc.ShowLog("CLocalNotiManager.Init", KCDefine.B_LOG_COLOR_PLUGIN);
 
-#if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
+#if UNITY_IOS || UNITY_ANDROID
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 			a_oCallback?.Invoke(this, true);
@@ -68,7 +68,7 @@ public class CLocalNotiManager : CSingleton<CLocalNotiManager> {
 		}
 #else
 		a_oCallback?.Invoke(this, false);
-#endif			// #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
+#endif			// #if UNITY_IOS || UNITY_ANDROID
 	}
 
 	//! 로컬 알림을 추가한다
