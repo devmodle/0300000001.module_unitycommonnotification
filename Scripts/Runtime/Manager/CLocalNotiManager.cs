@@ -58,7 +58,7 @@ public class CLocalNotiManager : CSingleton<CLocalNotiManager> {
 
 				return !oRequest.ExIsCompleteRequest();
 			});
-#elif UNITY_ANDROID
+#else
 			var oNotiChannel = new AndroidNotificationChannel(a_stParams.m_oGroupID,
 				a_stParams.m_oGroupName, a_stParams.m_oGroupDesc, a_stParams.m_eImportance);
 			
@@ -73,6 +73,10 @@ public class CLocalNotiManager : CSingleton<CLocalNotiManager> {
 
 	//! 로컬 알림을 추가한다
 	public void AddLocalNoti(string a_oKey, STLocalNotiInfo a_stNotiInfo) {
+		CFunc.ShowLog("CLocalNotiManager.AddLocalNoti: {0}, {1}, {2}", 
+			KCDefine.B_LOG_COLOR_PLUGIN, a_oKey, a_stNotiInfo.m_oTitle, a_stNotiInfo.m_oMsg);
+
+#if UNITY_IOS || UNITY_ANDROID
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 #if UNITY_IOS
@@ -83,25 +87,27 @@ public class CLocalNotiManager : CSingleton<CLocalNotiManager> {
 			};
 
 			iOSNotificationCenter.ScheduleNotification(oNoti);
-#elif UNITY_ANDROID
+#else
 			var oNoti = new AndroidNotification(a_stNotiInfo.m_oTitle, 
 				a_stNotiInfo.m_oMsg, a_stNotiInfo.m_stNotiTime);
 				
 			AndroidNotificationCenter.SendNotificationWithExplicitID(oNoti, a_oKey, a_stNotiInfo.m_nID);
 #endif			// #if UNITY_IOS
 		}
+#endif			// #if UNITY_IOS || UNITY_ANDROID
 	}
 
 	//! 로컬 알림을 제거한다
 	public void RemoveLocalNoti(string a_oKey) {
 		CAccess.Assert(a_oKey.ExIsValid());
 
+#if UNITY_IOS || UNITY_ANDROID
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 #if UNITY_IOS
 			iOSNotificationCenter.RemoveScheduledNotification(a_oKey);
 			iOSNotificationCenter.RemoveDeliveredNotification(a_oKey);
-#elif UNITY_ANDROID
+#else
 			int nID = 0;
 			CAccess.Assert(int.TryParse(a_oKey, out nID));
 
@@ -110,6 +116,7 @@ public class CLocalNotiManager : CSingleton<CLocalNotiManager> {
 			AndroidNotificationCenter.CancelDisplayedNotification(nID);
 #endif			// #if UNITY_IOS
 		}
+#endif			// #if UNITY_IOS || UNITY_ANDROID
 	}
 	#endregion			// 함수
 
