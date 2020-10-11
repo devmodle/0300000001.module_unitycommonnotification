@@ -14,7 +14,7 @@ public class CLocalNotiManager : CSingleton<CLocalNotiManager> {
 	//! 매개 변수
 	public struct STParams {
 #if UNITY_IOS
-		public AuthorizationOption m_eNotiOptions;
+		public AuthorizationOption m_eAuthOpts;
 #elif UNITY_ANDROID
 		public Importance m_eImportance;
 
@@ -45,7 +45,7 @@ public class CLocalNotiManager : CSingleton<CLocalNotiManager> {
 			m_oInitCallback = a_oCallback;
 
 #if UNITY_IOS
-			var oRequest = new AuthorizationRequest(a_stParams.m_eNotiOptions, false);
+			var oRequest = new AuthorizationRequest(a_stParams.m_eAuthOpts, false);
 
 			float fDeltaTime = KCDefine.U_DELTA_TIME_LOCAL_NM_REQUEST_CHECK;
 			float fMaxDeltaTime = KCDefine.U_MAX_DELTA_TIME_LOCAL_NM_REQUEST_CHECK;
@@ -108,7 +108,7 @@ public class CLocalNotiManager : CSingleton<CLocalNotiManager> {
 			iOSNotificationCenter.RemoveScheduledNotification(a_oKey);
 			iOSNotificationCenter.RemoveDeliveredNotification(a_oKey);
 #else
-			int nID = 0;
+			int nID = KCDefine.B_ZERO_VALUE_INT;
 			CAccess.Assert(int.TryParse(a_oKey, out nID));
 
 			AndroidNotificationCenter.CancelNotification(nID);
