@@ -38,7 +38,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 	//! 초기화
 	public virtual void Init(STParams a_stParams, System.Action<CNotiManager, bool> a_oCallback) {
 #if UNITY_IOS
-		CAccess.Assert(a_stParams.m_eAuthOpts.ExIsValid());
+		CAccess.Assert(a_stParams.m_eAuthOpts.ExIsValidAuthOpts());
 #elif UNITY_ANDROID
 		CAccess.Assert(a_stParams.m_eImportance != Importance.None);
 #endif			// #if UNITY_IOS
