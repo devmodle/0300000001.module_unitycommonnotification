@@ -1,5 +1,5 @@
 {
-    "name": "UnityModule.Common.LocalNoti",
+    "name": "UnityModule.Common.Noti",
     "references": [
         "UnityModule.Common.Define",
         "UnityModule.Common.Access",
