@@ -1,7 +1,7 @@
 {
-  "name": "unitymodule.common.localnoti",
+  "name": "unitymodule.common.noti",
   "version": "1.0.0",
-  "displayName": "UnityModule.Common.LocalNoti",
+  "displayName": "UnityModule.Common.Noti",
   "author": {
     "name": "dante",
     "email": "are2341@nate.com"
