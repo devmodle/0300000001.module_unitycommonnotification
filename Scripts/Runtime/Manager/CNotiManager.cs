@@ -118,7 +118,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 			// 반복 모드 일 경우
 			if(a_stNotiInfo.m_bIsRepeat) {
 				oNoti.RepeatInterval = new System.TimeSpan(1, 
-					KCDefine.B_ZERO_VALUE_INT, KCDefine.B_ZERO_VALUE_INT, KCDefine.B_ZERO_VALUE_INT);
+					KCDefine.B_VALUE_INT_0, KCDefine.B_VALUE_INT_0, KCDefine.B_VALUE_INT_0);
 			}
 
 			int nID = this.MakeNotiID(a_oKey);
@@ -165,9 +165,9 @@ public class CNotiManager : CSingleton<CNotiManager> {
 		return new iOSNotificationCalendarTrigger() {
 			Repeats = a_stNotiInfo.m_bIsRepeat,
 
-			Year = a_stNotiInfo.m_stNotiTime.Year,
-			Month = a_stNotiInfo.m_stNotiTime.Month,
-			Day = a_stNotiInfo.m_stNotiTime.Day,
+			// Year = a_stNotiInfo.m_stNotiTime.Year,
+			// Month = a_stNotiInfo.m_stNotiTime.Month,
+			// Day = a_stNotiInfo.m_stNotiTime.Day,
 
 			Hour = a_stNotiInfo.m_stNotiTime.Hour,
 			Minute = a_stNotiInfo.m_stNotiTime.Minute,
@@ -198,7 +198,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 
 	//! 알림 식별자를 생성한다
 	private int MakeNotiID(string a_oKey) {
-		int nID = KCDefine.B_ZERO_VALUE_INT;
+		int nID = KCDefine.B_VALUE_INT_0;
 		CAccess.Assert(int.TryParse(a_oKey, out nID));
 
 		return nID;
