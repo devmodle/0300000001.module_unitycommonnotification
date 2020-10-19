@@ -162,16 +162,12 @@ public class CNotiManager : CSingleton<CNotiManager> {
 #if UNITY_IOS
 	//! 알림 발생자를 생성한다
 	private iOSNotificationTrigger CreateNotiTrigger(STNotiInfo a_stNotiInfo) {
-		return new iOSNotificationCalendarTrigger() {
+		var stDeltaTime = a_stNotiInfo.m_stNotiTime - System.DateTime.Now;
+		CAccess.Assert(stDeltaTime.ExIsValid());
+
+		return new iOSNotificationTimeIntervalTrigger() {
 			Repeats = a_stNotiInfo.m_bIsRepeat,
-
-			// Year = a_stNotiInfo.m_stNotiTime.Year,
-			// Month = a_stNotiInfo.m_stNotiTime.Month,
-			// Day = a_stNotiInfo.m_stNotiTime.Day,
-
-			Hour = a_stNotiInfo.m_stNotiTime.Hour,
-			Minute = a_stNotiInfo.m_stNotiTime.Minute,
-			Second = a_stNotiInfo.m_stNotiTime.Second
+			TimeInterval = stDeltaTime
 		};
 	}
 #endif			// #if UNITY_IOS
