@@ -158,7 +158,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 	//! 초기화 되었을 경우
 	private void OnInit() {
 		this.IsInit = true;
-		m_oInitCallback?.Invoke(this, this.IsInit);
+		m_oInitCallback?.Invoke(this, true);
 	}
 
 #if UNITY_IOS
