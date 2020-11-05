@@ -157,8 +157,12 @@ public class CNotiManager : CSingleton<CNotiManager> {
 #if UNITY_IOS || UNITY_ANDROID
 	//! 초기화 되었을 경우
 	private void OnInit() {
-		this.IsInit = true;
-		m_oInitCallback?.Invoke(this, true);
+		CScheduleManager.Instance.AddCallback(KCDefine.U_KEY_NOTI_M_INIT_CALLBACK, () => {
+			CFunc.ShowLog("CNotiManager.OnInit");
+
+			this.IsInit = true;
+			m_oInitCallback?.Invoke(this, true);
+		});
 	}
 
 #if UNITY_IOS
