@@ -118,8 +118,10 @@ public class CNotiManager : CSingleton<CNotiManager> {
 				
 			// 반복 모드 일 경우
 			if(a_stNotiInfo.m_bIsRepeat) {
-				oNoti.RepeatInterval = new System.TimeSpan(1, 
-					KCDefine.B_VALUE_INT_0, KCDefine.B_VALUE_INT_0, KCDefine.B_VALUE_INT_0);
+				oNoti.RepeatInterval = new System.TimeSpan(KCDefine.B_VALUE_INT_1, 
+					KCDefine.B_VALUE_INT_0, 
+					KCDefine.B_VALUE_INT_0, 
+					KCDefine.B_VALUE_INT_0);
 			}
 
 			int nID = this.MakeNotiID(a_oKey);
