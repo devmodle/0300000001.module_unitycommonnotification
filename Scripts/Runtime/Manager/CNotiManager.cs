@@ -163,7 +163,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 			CFunc.ShowLog("CNotiManager.OnInit");
 
 			this.IsInit = true;
-			m_oInitCallback?.Invoke(this, true);
+			CFunc.Invoke(ref m_oInitCallback, this, true);
 		});
 	}
 
