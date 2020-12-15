@@ -39,16 +39,18 @@ public class CNotiManager : CSingleton<CNotiManager> {
 
 	#region 함수
 	//! 초기화
-	public virtual void Init(STParams a_stParams, System.Action<CNotiManager, bool> a_oCallback) {
-		CFunc.ShowLog("CNotiManager.Init", KCDefine.B_LOG_COLOR_PLUGIN);
-		
-#if UNITY_IOS || UNITY_ANDROID
+	public virtual void Init(STParams a_stParams, 
+		System.Action<CNotiManager, bool> a_oCallback) 
+	{
 #if UNITY_IOS
 		CAccess.Assert(a_stParams.m_eAuthOpts.ExIsValidAuthOpts());
-#else
+#elif UNITY_ANDROID
 		CAccess.Assert(a_stParams.m_eImportance != Importance.None);
 #endif			// #if UNITY_IOS
 
+		CFunc.ShowLog("CNotiManager.Init", KCDefine.B_LOG_COLOR_PLUGIN);
+		
+#if UNITY_IOS || UNITY_ANDROID
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 			a_oCallback?.Invoke(this, true);
@@ -89,12 +91,12 @@ public class CNotiManager : CSingleton<CNotiManager> {
 
 	//! 알림을 추가한다
 	public void AddNoti(string a_oKey, string a_oGroupID, STNotiInfo a_stNotiInfo) {
+		CAccess.Assert(a_oKey.ExIsValid() && a_oGroupID.ExIsValid());
+
 		CFunc.ShowLog("CNotiManager.AddNoti: {0}, {1}, {2}", 
 			KCDefine.B_LOG_COLOR_PLUGIN, a_oKey, a_oGroupID, a_stNotiInfo.m_stNotiTime);
 
 #if UNITY_IOS || UNITY_ANDROID
-		CAccess.Assert(a_oKey.ExIsValid() && a_oGroupID.ExIsValid());
-
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 #if UNITY_IOS
@@ -131,11 +133,10 @@ public class CNotiManager : CSingleton<CNotiManager> {
 
 	//! 알림을 제거한다
 	public void RemoveNoti(string a_oKey) {
+		CAccess.Assert(a_oKey.ExIsValid());
 		CFunc.ShowLog("CNotiManager.RemoveNoti: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oKey);
 
 #if UNITY_IOS || UNITY_ANDROID
-		CAccess.Assert(a_oKey.ExIsValid());
-		
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 #if UNITY_IOS
