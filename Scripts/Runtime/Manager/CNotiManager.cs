@@ -61,8 +61,8 @@ public class CNotiManager : CSingleton<CNotiManager> {
 #if UNITY_IOS
 			var oRequest = new AuthorizationRequest(a_stParams.m_eAuthOpts, false);
 
-			float fDeltaTime = KCDefine.U_DELTA_TIME_NOTI_M_REQUEST_CHECK;
-			float fMaxDeltaTime = KCDefine.U_MAX_DELTA_TIME_NOTI_M_REQUEST_CHECK;
+			float fDeltaTime = KCDefine.U_DELTA_T_NOTI_M_REQUEST_CHECK;
+			float fMaxDeltaTime = KCDefine.U_MAX_DELTA_T_NOTI_M_REQUEST_CHECK;
 
 			this.ExRepeatCallFunc(fDeltaTime, fMaxDeltaTime, (a_oComponent, a_oParams, a_bIsComplete) => {
 				// 요청이 완료 되었을 경우
