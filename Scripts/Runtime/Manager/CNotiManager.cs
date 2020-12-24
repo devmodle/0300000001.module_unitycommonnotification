@@ -76,7 +76,9 @@ public class CNotiManager : CSingleton<CNotiManager> {
 			this.AddNotiGroup(KCDefine.U_DEF_GROUP_ID_NOTI, 
 				KCDefine.U_DEF_GROUP_N_NOTI, KCDefine.U_DEF_GROUP_DESC_NOTI, a_stParams.m_eImportance);
 
-			this.ExLateCallFunc((a_oSender, a_oParams) => this.OnInit());
+			this.ExLateCallFunc((a_oSender, a_oParams) => {
+				this.OnInit();
+			});
 #endif			// #if UNITY_IOS
 		}
 #else
