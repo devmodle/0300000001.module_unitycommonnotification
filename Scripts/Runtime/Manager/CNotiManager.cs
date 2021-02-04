@@ -183,7 +183,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 			var oNotiGroup = new AndroidNotificationChannel(a_oID, a_oName, a_oDesc, a_eImportance);
-			m_oNotiGroupIDList.Add(a_oID);
+			m_oNotiGroupIDList.ExAddValue(a_oID);
 			
 			AndroidNotificationCenter.RegisterNotificationChannel(oNotiGroup);
 		}
