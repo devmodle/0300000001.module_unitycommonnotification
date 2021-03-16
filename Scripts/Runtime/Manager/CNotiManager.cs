@@ -62,14 +62,14 @@ public class CNotiManager : CSingleton<CNotiManager> {
 			float fDeltaTime = KCDefine.U_DELTA_T_NOTI_M_REQUEST_CHECK;
 			float fMaxDeltaTime = KCDefine.U_MAX_DELTA_T_NOTI_M_REQUEST_CHECK;
 
-			this.ExRepeatCallFunc(fDeltaTime, fMaxDeltaTime, (a_oComponent, a_oParams, a_bIsComplete) => {
+			this.ExRepeatCallFunc((a_oComponent, a_oParams, a_bIsComplete) => {
 				// 요청이 완료 되었을 경우
 				if(a_bIsComplete) {
 					this.OnInit();
 				}
 
 				return !oRequest.ExIsCompleteRequest();
-			});
+			}, fDeltaTime, fMaxDeltaTime);
 #else
 			this.AddNotiGroup(KCDefine.U_DEF_GROUP_ID_NOTI, KCDefine.U_DEF_GROUP_N_NOTI, KCDefine.U_DEF_GROUP_DESC_NOTI, a_stParams.m_eImportance);
 			this.ExLateCallFunc((a_oSender, a_oParams) => this.OnInit());
