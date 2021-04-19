@@ -115,8 +115,8 @@ public class CNotiManager : CSingleton<CNotiManager> {
 				
 			// 반복 모드 일 경우
 			if(a_stNotiInfo.m_bIsRepeat) {
-				oNoti.RepeatInterval = new System.TimeSpan(KCDefine.B_VALUE_1_INT, 
-					KCDefine.B_VALUE_0_INT, KCDefine.B_VALUE_0_INT, KCDefine.B_VALUE_0_INT);
+				oNoti.RepeatInterval = new System.TimeSpan(KCDefine.B_VAL_1_INT, 
+					KCDefine.B_VAL_0_INT, KCDefine.B_VAL_0_INT, KCDefine.B_VAL_0_INT);
 			}
 
 			int nID = this.MakeNotiID(a_oKey);
@@ -191,7 +191,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 
 	//! 알림 식별자를 생성한다
 	private int MakeNotiID(string a_oKey) {
-		int nID = KCDefine.B_VALUE_0_INT;
+		int nID = KCDefine.B_VAL_0_INT;
 		CAccess.Assert(int.TryParse(a_oKey, out nID));
 
 		return nID;
