@@ -88,7 +88,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 	//! 알림을 추가한다
 	public void AddNoti(string a_oKey, string a_oGroupID, STNotiInfo a_stNotiInfo) {
 		CAccess.Assert(a_oKey.ExIsValid() && a_oGroupID.ExIsValid());
-		CFunc.ShowLog("CNotiManager.AddNoti: {0}, {1}, {2}", KCDefine.B_LOG_COLOR_PLUGIN, a_oKey, a_oGroupID, a_stNotiInfo.m_stNotiTime);
+		CFunc.ShowLog($"CNotiManager.AddNoti: {a_oKey}, {a_oGroupID}, {a_stNotiInfo.m_stNotiTime}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 #if UNITY_IOS || UNITY_ANDROID
 		// 초기화 되었을 경우
@@ -129,7 +129,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 	//! 알림을 제거한다
 	public void RemoveNoti(string a_oKey) {
 		CAccess.Assert(a_oKey.ExIsValid());
-		CFunc.ShowLog("CNotiManager.RemoveNoti: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oKey);
+		CFunc.ShowLog($"CNotiManager.RemoveNoti: {a_oKey}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 #if UNITY_IOS || UNITY_ANDROID
 		// 초기화 되었을 경우
@@ -178,7 +178,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 	//! 알림 그룹을 추가한다
 	public void AddNotiGroup(string a_oID, string a_oName, string a_oDesc, Importance a_eImportance = Importance.Low) {
 		CAccess.Assert(a_oID.ExIsValid() && !m_oNotiGroupIDList.Contains(a_oID));
-		CFunc.ShowLog("CNotiManager.AddNotiGroup: {0}, {1}, {2}. {3}", KCDefine.B_LOG_COLOR_PLUGIN, a_oID, a_oName, a_oDesc, a_eImportance);
+		CFunc.ShowLog($"CNotiManager.AddNotiGroup: {a_oID}, {a_oName}, {a_oDesc}, {a_eImportance}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 		// 초기화 되었을 경우
 		if(this.IsInit) {
