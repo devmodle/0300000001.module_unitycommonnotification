@@ -71,7 +71,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 				return !oRequest.ExIsCompleteRequest();
 			}, fDeltaTime, fMaxDeltaTime);
 #else
-			this.AddNotiGroup(KCDefine.U_DEF_GROUP_ID_NOTI, KCDefine.U_DEF_GROUP_N_NOTI, KCDefine.U_DEF_GROUP_DESC_NOTI, a_stParams.m_eImportance);
+			this.AddNotiGroup(KCDefine.U_GROUP_ID_NOTI, KCDefine.U_GROUP_N_NOTI, KCDefine.U_GROUP_DESC_NOTI, a_stParams.m_eImportance);
 			this.ExLateCallFunc((a_oSender, a_oParams) => this.OnInit());
 #endif			// #if UNITY_IOS
 		}
@@ -82,7 +82,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 
 	//! 알림을 추가한다
 	public void AddNoti(string a_oKey, STNotiInfo a_stNotiInfo) {
-		this.AddNoti(a_oKey, KCDefine.U_DEF_GROUP_ID_NOTI, a_stNotiInfo);
+		this.AddNoti(a_oKey, KCDefine.U_GROUP_ID_NOTI, a_stNotiInfo);
 	}
 
 	//! 알림을 추가한다
