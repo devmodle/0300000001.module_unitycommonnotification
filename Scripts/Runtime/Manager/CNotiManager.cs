@@ -88,7 +88,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 	//! 알림을 추가한다
 	public void AddNoti(string a_oKey, string a_oGroupID, STNotiInfo a_stNotiInfo) {
 		CAccess.Assert(a_oKey.ExIsValid() && a_oGroupID.ExIsValid());
-		CFunc.ShowLog($"CNotiManager.AddNoti: {a_oKey}, {a_oGroupID}, {a_stNotiInfo.m_stNotiTime}", KCDefine.B_LOG_COLOR_PLUGIN);
+		CFunc.ShowLog($"CNotiManager.AddNoti: {a_oKey}, {a_oGroupID}, {a_stNotiInfo.m_oMsg}, {a_stNotiInfo.m_stNotiTime}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 #if UNITY_IOS || UNITY_ANDROID
 		// 초기화 되었을 경우
@@ -115,8 +115,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 				
 			// 반복 모드 일 경우
 			if(a_stNotiInfo.m_bIsRepeat) {
-				oNoti.RepeatInterval = new System.TimeSpan(KCDefine.B_VAL_1_INT, 
-					KCDefine.B_VAL_0_INT, KCDefine.B_VAL_0_INT, KCDefine.B_VAL_0_INT);
+				oNoti.RepeatInterval = new System.TimeSpan(KCDefine.B_VAL_1_INT, KCDefine.B_VAL_0_INT, KCDefine.B_VAL_0_INT, KCDefine.B_VAL_0_INT);
 			}
 
 			int nID = this.MakeNotiID(a_oKey);
