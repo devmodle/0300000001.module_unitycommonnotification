@@ -63,7 +63,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 			float fMaxDeltaTime = KCDefine.U_MAX_DELTA_T_NOTI_M_REQUEST_CHECK;
 
 			this.ExRepeatCallFunc((a_oComponent, a_oParams, a_bIsComplete) => {
-				// 요청이 완료 되었을 경우
+				// 완료 되었을 경우
 				if(a_bIsComplete) {
 					this.OnInit();
 				}
