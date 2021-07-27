@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.UI;
 
 #if NOTI_MODULE_ENABLE
 #if UNITY_IOS
