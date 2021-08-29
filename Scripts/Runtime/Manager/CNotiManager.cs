@@ -25,7 +25,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 
 	//! 콜백 매개 변수
 	public struct STCallbackParams {
-		public System.Action<CNotiManager, bool> m_oInitCallback;
+		public System.Action<CNotiManager, bool> m_oCallback;
 	}
 
 	#region 변수
@@ -55,7 +55,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 #if UNITY_IOS || UNITY_ANDROID
 		// 초기화 되었을 경우
 		if(this.IsInit) {
-			a_stCallbackParams.m_oInitCallback?.Invoke(this, true);
+			a_stCallbackParams.m_oCallback?.Invoke(this, true);
 		} else {
 			m_stParams = a_stParams;
 			m_stCallbackParams = a_stCallbackParams;
@@ -80,7 +80,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 #endif			// #if UNITY_IOS
 		}
 #else
-		a_stCallbackParams.m_oInitCallback?.Invoke(this, false);
+		a_stCallbackParams.m_oCallback?.Invoke(this, false);
 #endif			// #if UNITY_IOS || UNITY_ANDROID
 	}
 
@@ -160,7 +160,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 			CFunc.ShowLog("CNotiManager.OnInit");
 			this.IsInit = true;
 
-			CFunc.Invoke(ref m_stCallbackParams.m_oInitCallback, this, true);
+			CFunc.Invoke(ref m_stCallbackParams.m_oCallback, this, true);
 		});
 	}
 
