@@ -13,7 +13,6 @@ using Unity.Notifications.Android;
 
 //! 알림 관리자
 public class CNotiManager : CSingleton<CNotiManager> {
-	#region 타입
 	//! 매개 변수
 	public struct STParams {
 #if UNITY_IOS
@@ -23,11 +22,15 @@ public class CNotiManager : CSingleton<CNotiManager> {
 		public Importance m_eImportance;
 #endif			// #if UNITY_IOS
 	}
-	#endregion			// 타입
+
+	//! 콜백 매개 변수
+	public struct STCallbackParams {
+		public System.Action<CNotiManager, bool> m_oInitCallback;
+	}
 
 	#region 변수
 	private STParams m_stParams;
-	private System.Action<CNotiManager, bool> m_oInitCallback = null;
+	private STCallbackParams m_stCallbackParams;
 
 #if UNITY_ANDROID
 	private List<string> m_oNotiGroupIDList = new List<string>();
@@ -40,7 +43,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 
 	#region 함수
 	//! 초기화
-	public virtual void Init(STParams a_stParams, System.Action<CNotiManager, bool> a_oCallback) {
+	public virtual void Init(STParams a_stParams, STCallbackParams a_stCallbackParams) {
 #if UNITY_IOS
 		CAccess.Assert(a_stParams.m_eAuthOpts.ExIsValidAuthOpts());
 #elif UNITY_ANDROID
@@ -52,10 +55,10 @@ public class CNotiManager : CSingleton<CNotiManager> {
 #if UNITY_IOS || UNITY_ANDROID
 		// 초기화 되었을 경우
 		if(this.IsInit) {
-			a_oCallback?.Invoke(this, true);
+			a_stCallbackParams.m_oInitCallback?.Invoke(this, true);
 		} else {
 			m_stParams = a_stParams;
-			m_oInitCallback = a_oCallback;
+			m_stCallbackParams = a_stCallbackParams;
 
 #if UNITY_IOS
 			var oRequest = new AuthorizationRequest(a_stParams.m_eAuthOpts, false);
@@ -77,7 +80,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 #endif			// #if UNITY_IOS
 		}
 #else
-		a_oCallback?.Invoke(this, false);
+		a_stCallbackParams.m_oInitCallback?.Invoke(this, false);
 #endif			// #if UNITY_IOS || UNITY_ANDROID
 	}
 
@@ -157,7 +160,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 			CFunc.ShowLog("CNotiManager.OnInit");
 			this.IsInit = true;
 
-			CFunc.Invoke(ref m_oInitCallback, this, true);
+			CFunc.Invoke(ref m_stCallbackParams.m_oInitCallback, this, true);
 		});
 	}
 
