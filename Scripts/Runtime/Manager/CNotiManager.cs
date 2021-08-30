@@ -44,14 +44,14 @@ public class CNotiManager : CSingleton<CNotiManager> {
 	#region 함수
 	//! 초기화
 	public virtual void Init(STParams a_stParams, STCallbackParams a_stCallbackParams) {
+		CFunc.ShowLog("CNotiManager.Init", KCDefine.B_LOG_COLOR_PLUGIN);
+
 #if UNITY_IOS
 		CAccess.Assert(a_stParams.m_eAuthOpts.ExIsValidAuthOpts());
 #elif UNITY_ANDROID
 		CAccess.Assert(a_stParams.m_eImportance != Importance.None);
 #endif			// #if UNITY_IOS
 
-		CFunc.ShowLog("CNotiManager.Init", KCDefine.B_LOG_COLOR_PLUGIN);
-		
 #if UNITY_IOS || UNITY_ANDROID
 		// 초기화 되었을 경우
 		if(this.IsInit) {
@@ -91,8 +91,8 @@ public class CNotiManager : CSingleton<CNotiManager> {
 
 	//! 알림을 추가한다
 	public void AddNoti(string a_oKey, string a_oGroupID, STNotiInfo a_stNotiInfo) {
-		CAccess.Assert(a_oKey.ExIsValid() && a_oGroupID.ExIsValid());
 		CFunc.ShowLog($"CNotiManager.AddNoti: {a_oKey}, {a_oGroupID}, {a_stNotiInfo.m_oMsg}, {a_stNotiInfo.m_stNotiTime}", KCDefine.B_LOG_COLOR_PLUGIN);
+		CAccess.Assert(a_oKey.ExIsValid() && a_oGroupID.ExIsValid());
 
 #if UNITY_IOS || UNITY_ANDROID
 		// 초기화 되었을 경우
@@ -131,8 +131,8 @@ public class CNotiManager : CSingleton<CNotiManager> {
 
 	//! 알림을 제거한다
 	public void RemoveNoti(string a_oKey) {
-		CAccess.Assert(a_oKey.ExIsValid());
 		CFunc.ShowLog($"CNotiManager.RemoveNoti: {a_oKey}", KCDefine.B_LOG_COLOR_PLUGIN);
+		CAccess.Assert(a_oKey.ExIsValid());
 
 #if UNITY_IOS || UNITY_ANDROID
 		// 초기화 되었을 경우
@@ -156,10 +156,10 @@ public class CNotiManager : CSingleton<CNotiManager> {
 #if UNITY_IOS || UNITY_ANDROID
 	// 초기화 되었을 경우
 	private void OnInit() {
-		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_NOTI_M_INIT_CALLBACK, () => {
-			CFunc.ShowLog("CNotiManager.OnInit");
-			this.IsInit = true;
+		CFunc.ShowLog("CNotiManager.OnInit");
 
+		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_NOTI_M_INIT_CALLBACK, () => {	
+			this.IsInit = true;
 			CFunc.Invoke(ref m_stCallbackParams.m_oCallback, this, true);
 		});
 	}
@@ -180,8 +180,8 @@ public class CNotiManager : CSingleton<CNotiManager> {
 #if UNITY_ANDROID
 	//! 알림 그룹을 추가한다
 	public void AddNotiGroup(string a_oID, string a_oName, string a_oDesc, Importance a_eImportance = Importance.Low) {
-		CAccess.Assert(a_oID.ExIsValid() && !m_oNotiGroupIDList.Contains(a_oID));
 		CFunc.ShowLog($"CNotiManager.AddNotiGroup: {a_oID}, {a_oName}, {a_oDesc}, {a_eImportance}", KCDefine.B_LOG_COLOR_PLUGIN);
+		CAccess.Assert(a_oID.ExIsValid() && !m_oNotiGroupIDList.Contains(a_oID));
 
 		// 초기화 되었을 경우
 		if(this.IsInit) {
