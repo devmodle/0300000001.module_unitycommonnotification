@@ -11,9 +11,9 @@ using Unity.Notifications.iOS;
 using Unity.Notifications.Android;
 #endif			// #if UNITY_IOS
 
-//! 알림 관리자
+/** 알림 관리자 */
 public class CNotiManager : CSingleton<CNotiManager> {
-	//! 매개 변수
+	/** 매개 변수 */
 	public struct STParams {
 #if UNITY_IOS
 		public AuthorizationOption m_eAuthOpts;
@@ -23,7 +23,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 #endif			// #if UNITY_IOS
 	}
 
-	//! 콜백 매개 변수
+	/** 콜백 매개 변수 */
 	public struct STCallbackParams {
 		public System.Action<CNotiManager, bool> m_oCallback;
 	}
@@ -42,7 +42,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 	#endregion			// 프로퍼티
 
 	#region 함수
-	//! 초기화
+	/** 초기화 */
 	public virtual void Init(STParams a_stParams, STCallbackParams a_stCallbackParams) {
 		CFunc.ShowLog("CNotiManager.Init", KCDefine.B_LOG_COLOR_PLUGIN);
 
@@ -84,12 +84,12 @@ public class CNotiManager : CSingleton<CNotiManager> {
 #endif			// #if UNITY_IOS || UNITY_ANDROID
 	}
 
-	//! 알림을 추가한다
+	/** 알림을 추가한다 */
 	public void AddNoti(string a_oKey, STNotiInfo a_stNotiInfo) {
 		this.AddNoti(a_oKey, KCDefine.U_GROUP_ID_NOTI, a_stNotiInfo);
 	}
 
-	//! 알림을 추가한다
+	/** 알림을 추가한다 */
 	public void AddNoti(string a_oKey, string a_oGroupID, STNotiInfo a_stNotiInfo) {
 		CFunc.ShowLog($"CNotiManager.AddNoti: {a_oKey}, {a_oGroupID}, {a_stNotiInfo.m_oMsg}, {a_stNotiInfo.m_stNotiTime}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oKey.ExIsValid() && a_oGroupID.ExIsValid());
@@ -129,7 +129,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 #endif			// #if UNITY_IOS || UNITY_ANDROID
 	}
 
-	//! 알림을 제거한다
+	/** 알림을 제거한다 */
 	public void RemoveNoti(string a_oKey) {
 		CFunc.ShowLog($"CNotiManager.RemoveNoti: {a_oKey}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oKey.ExIsValid());
@@ -165,7 +165,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 	}
 
 #if UNITY_IOS
-	//! 알림 발생자를 생성한다
+	/** 알림 발생자를 생성한다 */
 	private iOSNotificationTrigger CreateNotiTrigger(STNotiInfo a_stNotiInfo) {
 		var stDeltaTime = a_stNotiInfo.m_stNotiTime - System.DateTime.Now;
 		CAccess.Assert(stDeltaTime.ExIsValid());
@@ -178,7 +178,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 #endif			// #if UNITY_IOS
 
 #if UNITY_ANDROID
-	//! 알림 그룹을 추가한다
+	/** 알림 그룹을 추가한다 */
 	public void AddNotiGroup(string a_oID, string a_oName, string a_oDesc, Importance a_eImportance = Importance.Low) {
 		CFunc.ShowLog($"CNotiManager.AddNotiGroup: {a_oID}, {a_oName}, {a_oDesc}, {a_eImportance}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oID.ExIsValid() && !m_oNotiGroupIDList.Contains(a_oID));
@@ -192,7 +192,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 		}
 	}
 
-	//! 알림 식별자를 생성한다
+	/** 알림 식별자를 생성한다 */
 	private int MakeNotiID(string a_oKey) {
 		int nID = KCDefine.B_VAL_0_INT;
 		CAccess.Assert(int.TryParse(a_oKey, out nID));
