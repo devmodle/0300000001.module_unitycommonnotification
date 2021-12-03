@@ -99,18 +99,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 		if(this.IsInit) {
 #if UNITY_IOS
 			var oNoti = new iOSNotification() {
-				ShowInForeground = a_stNotiInfo.m_bIsShowForeground,
-				ForegroundPresentationOption = m_stParams.m_ePresentOpts,
-
-				Title = a_stNotiInfo.m_oTitle,
-				Subtitle = a_stNotiInfo.m_oSubTitle,
-				Body = a_stNotiInfo.m_oMsg,
-
-				Identifier = a_oKey,
-				CategoryIdentifier = a_oGroupID,
-				ThreadIdentifier = Thread.CurrentThread.Name,
-
-				Trigger = this.CreateNotiTrigger(a_stNotiInfo)
+				ShowInForeground = a_stNotiInfo.m_bIsShowForeground, ForegroundPresentationOption = m_stParams.m_ePresentOpts, Title = a_stNotiInfo.m_oTitle, Subtitle = a_stNotiInfo.m_oSubTitle, Body = a_stNotiInfo.m_oMsg, Identifier = a_oKey, CategoryIdentifier = a_oGroupID, ThreadIdentifier = Thread.CurrentThread.Name, Trigger = this.CreateNotiTrigger(a_stNotiInfo)
 			};
 
 			iOSNotificationCenter.ScheduleNotification(oNoti);
@@ -171,8 +160,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 		CAccess.Assert(stDeltaTime.ExIsValid());
 
 		return new iOSNotificationTimeIntervalTrigger() {
-			Repeats = a_stNotiInfo.m_bIsRepeat,
-			TimeInterval = stDeltaTime
+			Repeats = a_stNotiInfo.m_bIsRepeat, TimeInterval = stDeltaTime
 		};
 	}
 #endif			// #if UNITY_IOS
