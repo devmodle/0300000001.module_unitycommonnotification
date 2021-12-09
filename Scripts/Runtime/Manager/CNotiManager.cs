@@ -63,13 +63,13 @@ public class CNotiManager : CSingleton<CNotiManager> {
 #if UNITY_IOS
 			var oRequest = new AuthorizationRequest(a_stParams.m_eAuthOpts, false);
 
-			this.ExRepeatCallFunc((a_oComponent, a_bIsComplete) => {
+			this.ExRepeatCallFunc((a_oSender, a_bIsComplete) => {
 				// 완료 되었을 경우
 				if(a_bIsComplete) {
 					this.OnInit();
 				}
-
-				return a_oSender != null && !a_oSender.IsFinished;
+				
+				return oRequest != null && !oRequest.IsFinished;
 			}, KCDefine.U_DELTA_T_NOTI_M_REQUEST_CHECK, KCDefine.U_MAX_DELTA_T_NOTI_M_REQUEST_CHECK);
 #else
 			this.AddNotiGroup(KCDefine.U_GROUP_ID_NOTI, KCDefine.U_GROUP_N_NOTI, KCDefine.U_GROUP_DESC_NOTI, a_stParams.m_eImportance);
