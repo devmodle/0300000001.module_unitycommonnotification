@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
@@ -43,6 +44,18 @@ public class CNotiManager : CSingleton<CNotiManager> {
 
 	#region 함수
 	/** 초기화 */
+	public override void Awake() {
+		base.Awake();
+
+#if UNITY_ANDROID
+		// 알림 그룹 식별자 파일이 존재 할 경우
+		if(File.Exists(KCDefine.U_DATA_P_NOTI_GROUP_IDS)) {
+			m_oNotiGroupIDList = CFunc.ReadMsgPackObj<List<string>>(KCDefine.U_DATA_P_NOTI_GROUP_IDS);
+		}
+#endif			// #if UNITY_ANDROID
+	}
+
+	/** 초기화 */
 	public virtual void Init(STParams a_stParams, STCallbackParams a_stCallbackParams) {
 		CFunc.ShowLog("CNotiManager.Init", KCDefine.B_LOG_COLOR_PLUGIN);
 
@@ -72,7 +85,11 @@ public class CNotiManager : CSingleton<CNotiManager> {
 				return oRequest != null && !oRequest.IsFinished;
 			}, KCDefine.U_DELTA_T_NOTI_M_REQUEST_CHECK, KCDefine.U_MAX_DELTA_T_NOTI_M_REQUEST_CHECK);
 #else
-			this.AddNotiGroup(KCDefine.U_GROUP_ID_NOTI, KCDefine.U_GROUP_N_NOTI, KCDefine.U_GROUP_DESC_NOTI, a_stParams.m_eImportance);
+			// 알림 그룹이 없을 경우
+			if(!m_oNotiGroupIDList.Contains(KCDefine.U_GROUP_ID_NOTI)) {
+				this.AddNotiGroup(KCDefine.U_GROUP_ID_NOTI, KCDefine.U_GROUP_N_NOTI, KCDefine.U_GROUP_DESC_NOTI, a_stParams.m_eImportance);
+			}
+
 			this.ExLateCallFunc((a_oSender) => this.OnInit());
 #endif			// #if UNITY_IOS
 		}
@@ -95,30 +112,23 @@ public class CNotiManager : CSingleton<CNotiManager> {
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 #if UNITY_IOS
-			var oNoti = new iOSNotification() {
-				ShowInForeground = a_stNotiInfo.m_bIsShowForeground, 
-				ForegroundPresentationOption = m_stParams.m_ePresentOpts, 
-				
-				Title = a_stNotiInfo.m_oTitle, 
-				Subtitle = a_stNotiInfo.m_oSubTitle, 
-				Body = a_stNotiInfo.m_oMsg, 
+			iOSNotificationCenter.ScheduleNotification(new iOSNotification() {
+				Title = a_stNotiInfo.m_oTitle,
+				Subtitle = a_stNotiInfo.m_oSubTitle,
+				Body = a_stNotiInfo.m_oMsg,
 
-				Identifier = a_oKey, 
-				CategoryIdentifier = a_oGroupID, 
-				ThreadIdentifier = Thread.CurrentThread.Name, 
-				
-				Trigger = this.CreateNotiTrigger(a_stNotiInfo)
-			};
+				Identifier = a_oKey,
+				CategoryIdentifier = a_oGroupID,
+				ThreadIdentifier = string.Format(KCDefine.B_TEXT_FMT_1_DIGITS, Thread.CurrentThread.ManagedThreadId),
 
-			iOSNotificationCenter.ScheduleNotification(oNoti);
+				Trigger = this.CreateNotiTrigger(a_stNotiInfo),
+				ShowInForeground = a_stNotiInfo.m_bIsShowForeground,
+				ForegroundPresentationOption = m_stParams.m_ePresentOpts
+			});
 #else
 			var oNoti = new AndroidNotification(a_stNotiInfo.m_oTitle, a_stNotiInfo.m_oMsg, a_stNotiInfo.m_stNotiTime);
-				
-			// 반복 모드 일 경우
-			if(a_stNotiInfo.m_bIsRepeat) {
-				oNoti.RepeatInterval = new System.TimeSpan(KCDefine.B_VAL_1_INT, KCDefine.B_VAL_0_INT, KCDefine.B_VAL_0_INT, KCDefine.B_VAL_0_INT);
-			}
-			
+			oNoti.RepeatInterval = a_stNotiInfo.m_bIsRepeat ? new System.TimeSpan(KCDefine.B_VAL_1_INT, KCDefine.B_VAL_0_INT, KCDefine.B_VAL_0_INT, KCDefine.B_VAL_0_INT) : null;
+
 			AndroidNotificationCenter.SendNotificationWithExplicitID(oNoti, a_oGroupID, this.MakeNotiID(a_oKey));
 #endif			// #if UNITY_IOS
 		}
@@ -135,13 +145,8 @@ public class CNotiManager : CSingleton<CNotiManager> {
 		if(this.IsInit) {
 #if UNITY_IOS
 			iOSNotificationCenter.RemoveScheduledNotification(a_oKey);
-			iOSNotificationCenter.RemoveDeliveredNotification(a_oKey);
 #else
-			int nID = this.MakeNotiID(a_oKey);			
-
-			AndroidNotificationCenter.CancelNotification(nID);
-			AndroidNotificationCenter.CancelScheduledNotification(nID);
-			AndroidNotificationCenter.CancelDisplayedNotification(nID);
+			AndroidNotificationCenter.CancelScheduledNotification(this.MakeNotiID(a_oKey));
 #endif			// #if UNITY_IOS
 		}
 #endif			// #if UNITY_IOS || UNITY_ANDROID
@@ -154,7 +159,13 @@ public class CNotiManager : CSingleton<CNotiManager> {
 	private void OnInit() {
 		CFunc.ShowLog("CNotiManager.OnInit");
 
-		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_NOTI_M_INIT_CALLBACK, () => {	
+		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_NOTI_M_INIT_CALLBACK, () => {
+#if UNITY_IOS
+			iOSNotificationCenter.RemoveAllDeliveredNotifications();
+#else
+			AndroidNotificationCenter.CancelAllDisplayedNotifications();
+#endif			// #if UNITY_IOS
+
 			this.IsInit = true;
 			CFunc.Invoke(ref m_stCallbackParams.m_oCallback, this, true);
 		});
@@ -174,16 +185,46 @@ public class CNotiManager : CSingleton<CNotiManager> {
 
 #if UNITY_ANDROID
 	/** 알림 그룹을 추가한다 */
-	public void AddNotiGroup(string a_oID, string a_oName, string a_oDesc, Importance a_eImportance = Importance.Low) {
+	private void AddNotiGroup(string a_oID, string a_oName, string a_oDesc, Importance a_eImportance = Importance.Low) {
 		CFunc.ShowLog($"CNotiManager.AddNotiGroup: {a_oID}, {a_oName}, {a_oDesc}, {a_eImportance}", KCDefine.B_LOG_COLOR_PLUGIN);
-		CAccess.Assert(a_oID.ExIsValid() && !m_oNotiGroupIDList.Contains(a_oID));
+		CAccess.Assert(a_oID.ExIsValid());
 
-		// 초기화 되었을 경우
-		if(this.IsInit) {
-			var oNotiGroup = new AndroidNotificationChannel(a_oID, a_oName, a_oDesc, a_eImportance);
-			m_oNotiGroupIDList.ExAddVal(a_oID);
-			
-			AndroidNotificationCenter.RegisterNotificationChannel(oNotiGroup);
+		// 그룹이 없을 경우
+		if(this.IsInit && !m_oNotiGroupIDList.Contains(a_oID)) {
+			this.AddNotiGroupID(a_oID);
+			AndroidNotificationCenter.RegisterNotificationChannel(new AndroidNotificationChannel(a_oID, a_oName, a_oDesc, a_eImportance));
+		}
+	}
+
+	/** 알림 그룹을 제거한다 */
+	private void RemoveNotiGroup(string a_oID) {
+		CFunc.ShowLog($"CNotiManager.RemoveNotiGroup: {a_oID}");
+		CAccess.Assert(a_oID.ExIsValid());
+
+		// 그룹이 존재 할 경우
+		if(this.IsInit && m_oNotiGroupIDList.Contains(a_oID)) {
+			this.RemoveNotiGroupID(a_oID);
+			AndroidNotificationCenter.DeleteNotificationChannel(a_oID);
+		}
+	}
+
+	/** 알림 그룹 식별자를 추가한다 */
+	private void AddNotiGroupID(string a_oID, bool a_bIsAutoSave = true) {
+		m_oNotiGroupIDList.ExAddVal(a_oID);
+
+		// 자동 저장 모드 일 경우
+		if(a_bIsAutoSave) {
+			CFunc.WriteMsgPackObj<List<string>>(KCDefine.U_DATA_P_NOTI_GROUP_IDS, m_oNotiGroupIDList);
+		}
+	}
+
+	/** 알림 그룹 식별자를 제거한다 */
+	private void RemoveNotiGroupID(string a_oID, bool a_bIsAutoSave = true) {
+		m_oNotiGroupIDList.ExRemoveVal(a_oID);
+
+		// 자동 저장 모드 일 경우
+		if(a_bIsAutoSave) {
+			CFunc.WriteMsgPackObj<List<string>>(KCDefine.U_DATA_P_NOTI_GROUP_IDS, m_oNotiGroupIDList);
 		}
 	}
 
