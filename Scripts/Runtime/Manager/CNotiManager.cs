@@ -119,7 +119,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 
 				Identifier = a_oKey,
 				CategoryIdentifier = a_oGroupID,
-				ThreadIdentifier = string.Format(KCDefine.B_TEXT_FMT_1_DIGITS, Thread.CurrentThread.ManagedThreadId),
+				ThreadIdentifier = $"{Thread.CurrentThread.ManagedThreadId}",
 
 				Trigger = this.CreateNotiTrigger(a_stNotiInfo),
 				ShowInForeground = a_stNotiInfo.m_bIsShowForeground,
