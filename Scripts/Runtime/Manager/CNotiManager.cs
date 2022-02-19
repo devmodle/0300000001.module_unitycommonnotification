@@ -50,7 +50,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 #if UNITY_ANDROID
 		// 알림 그룹 식별자 파일이 존재 할 경우
 		if(File.Exists(KCDefine.U_DATA_P_NOTI_GROUP_IDS)) {
-			m_oNotiGroupIDList = CFunc.ReadMsgPackObj<List<string>>(KCDefine.U_DATA_P_NOTI_GROUP_IDS);
+			m_oNotiGroupIDList = this.LoadNotiGroupIDs();
 		}
 #endif			// #if UNITY_ANDROID
 	}
@@ -209,23 +209,33 @@ public class CNotiManager : CSingleton<CNotiManager> {
 	}
 
 	/** 알림 그룹 식별자를 추가한다 */
-	private void AddNotiGroupID(string a_oID, bool a_bIsAutoSave = true) {
+	private void AddNotiGroupID(string a_oID) {
 		m_oNotiGroupIDList.ExAddVal(a_oID);
-
-		// 자동 저장 모드 일 경우
-		if(a_bIsAutoSave) {
-			CFunc.WriteMsgPackObj<List<string>>(KCDefine.U_DATA_P_NOTI_GROUP_IDS, m_oNotiGroupIDList);
-		}
+		this.SaveNotiGroupIDs(m_oNotiGroupIDList);
 	}
 
 	/** 알림 그룹 식별자를 제거한다 */
-	private void RemoveNotiGroupID(string a_oID, bool a_bIsAutoSave = true) {
+	private void RemoveNotiGroupID(string a_oID) {
 		m_oNotiGroupIDList.ExRemoveVal(a_oID);
+		this.SaveNotiGroupIDs(m_oNotiGroupIDList);
+	}
 
-		// 자동 저장 모드 일 경우
-		if(a_bIsAutoSave) {
-			CFunc.WriteMsgPackObj<List<string>>(KCDefine.U_DATA_P_NOTI_GROUP_IDS, m_oNotiGroupIDList);
-		}
+	/** 알림 그룹 식별자를 로드한다 */
+	private List<string> LoadNotiGroupIDs() {
+#if MSG_PACK_ENABLE
+		return CFunc.ReadMsgPackObj<List<string>>(KCDefine.U_DATA_P_NOTI_GROUP_IDS);
+#else
+		return CFunc.ReadJSONObj<List<string>>(KCDefine.U_DATA_P_NOTI_GROUP_IDS);
+#endif			// #if MSG_PACK_ENABLE
+	}
+
+	/** 알림 그룹 식별자를 저장한다 */
+	private void SaveNotiGroupIDs(List<string> a_oNotiGroupIDList) {
+#if MSG_PACK_ENABLE
+		CFunc.WriteMsgPackObj<List<string>>(KCDefine.U_DATA_P_NOTI_GROUP_IDS, a_oNotiGroupIDList);
+#else
+		CFunc.WriteJSONObj<List<string>>(KCDefine.U_DATA_P_NOTI_GROUP_IDS, a_oNotiGroupIDList);
+#endif			// #if MSG_PACK_ENABLE	
 	}
 
 	/** 알림 식별자를 생성한다 */
