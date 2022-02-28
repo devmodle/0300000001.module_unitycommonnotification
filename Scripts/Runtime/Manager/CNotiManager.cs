@@ -47,12 +47,12 @@ public class CNotiManager : CSingleton<CNotiManager> {
 	public override void Awake() {
 		base.Awake();
 
-#if UNITY_ANDROID
+#if UNITY_ANDROID && (MSG_PACK_ENABLE || NEWTON_SOFT_JSON_MODULE_ENABLE)
 		// 알림 그룹 식별자 파일이 존재 할 경우
 		if(File.Exists(KCDefine.U_DATA_P_NOTI_GROUP_IDS)) {
 			m_oNotiGroupIDList = this.LoadNotiGroupIDs();
 		}
-#endif			// #if UNITY_ANDROID
+#endif			// #if UNITY_ANDROID && (MSG_PACK_ENABLE || NEWTON_SOFT_JSON_MODULE_ENABLE)
 	}
 
 	/** 초기화 */
@@ -224,8 +224,10 @@ public class CNotiManager : CSingleton<CNotiManager> {
 	private List<string> LoadNotiGroupIDs() {
 #if MSG_PACK_ENABLE
 		return CFunc.ReadMsgPackObj<List<string>>(KCDefine.U_DATA_P_NOTI_GROUP_IDS);
-#else
+#elif NEWTON_SOFT_JSON_MODULE_ENABLE
 		return CFunc.ReadJSONObj<List<string>>(KCDefine.U_DATA_P_NOTI_GROUP_IDS);
+#else
+		return null;
 #endif			// #if MSG_PACK_ENABLE
 	}
 
@@ -233,7 +235,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 	private void SaveNotiGroupIDs(List<string> a_oNotiGroupIDList) {
 #if MSG_PACK_ENABLE
 		CFunc.WriteMsgPackObj<List<string>>(KCDefine.U_DATA_P_NOTI_GROUP_IDS, a_oNotiGroupIDList);
-#else
+#elif NEWTON_SOFT_JSON_MODULE_ENABLE
 		CFunc.WriteJSONObj<List<string>>(KCDefine.U_DATA_P_NOTI_GROUP_IDS, a_oNotiGroupIDList);
 #endif			// #if MSG_PACK_ENABLE	
 	}
