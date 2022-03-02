@@ -14,24 +14,27 @@ using Unity.Notifications.Android;
 
 /** 알림 관리자 */
 public class CNotiManager : CSingleton<CNotiManager> {
+	/** 콜백 */
+	public enum ECallback {
+		NONE = -1,
+		INIT,
+		[HideInInspector] MAX_VAL
+	}
+
 	/** 매개 변수 */
 	public struct STParams {
 #if UNITY_IOS
-		public AuthorizationOption m_eAuthOpts;
 		public PresentationOption m_ePresentOpts;
+		public AuthorizationOption m_eAuthorizationOpts;
 #elif UNITY_ANDROID
 		public Importance m_eImportance;
 #endif			// #if UNITY_IOS
-	}
 
-	/** 콜백 매개 변수 */
-	public struct STCallbackParams {
-		public System.Action<CNotiManager, bool> m_oCallback;
+		public Dictionary<ECallback, System.Action<CNotiManager, bool>> m_oCallbackDict;
 	}
 
 	#region 변수
 	private STParams m_stParams;
-	private STCallbackParams m_stCallbackParams;
 
 #if UNITY_ANDROID
 	private List<string> m_oNotiGroupIDList = new List<string>();
@@ -56,11 +59,11 @@ public class CNotiManager : CSingleton<CNotiManager> {
 	}
 
 	/** 초기화 */
-	public virtual void Init(STParams a_stParams, STCallbackParams a_stCallbackParams) {
+	public virtual void Init(STParams a_stParams) {
 		CFunc.ShowLog("CNotiManager.Init", KCDefine.B_LOG_COLOR_PLUGIN);
 
 #if UNITY_IOS
-		CAccess.Assert(a_stParams.m_eAuthOpts.ExIsValidAuthOpts());
+		CAccess.Assert(a_stParams.m_eAuthorizationOpts.ExIsValidAuthOpts());
 #elif UNITY_ANDROID
 		CAccess.Assert(a_stParams.m_eImportance != Importance.None);
 #endif			// #if UNITY_IOS
@@ -68,13 +71,12 @@ public class CNotiManager : CSingleton<CNotiManager> {
 #if UNITY_IOS || UNITY_ANDROID
 		// 초기화 되었을 경우
 		if(this.IsInit) {
-			a_stCallbackParams.m_oCallback?.Invoke(this, true);
+			a_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, true);
 		} else {
 			m_stParams = a_stParams;
-			m_stCallbackParams = a_stCallbackParams;
 
 #if UNITY_IOS
-			var oRequest = new AuthorizationRequest(a_stParams.m_eAuthOpts, false);
+			var oRequest = new AuthorizationRequest(a_stParams.m_eAuthorizationOpts, false);
 
 			this.ExRepeatCallFunc((a_oSender, a_bIsComplete) => {
 				// 완료 되었을 경우
@@ -94,7 +96,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 #endif			// #if UNITY_IOS
 		}
 #else
-		a_stCallbackParams.m_oCallback?.Invoke(this, false);
+		a_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, false);
 #endif			// #if UNITY_IOS || UNITY_ANDROID
 	}
 
@@ -167,7 +169,7 @@ public class CNotiManager : CSingleton<CNotiManager> {
 #endif			// #if UNITY_IOS
 
 			this.IsInit = true;
-			CFunc.Invoke(ref m_stCallbackParams.m_oCallback, this, true);
+			m_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, true);
 		});
 	}
 
