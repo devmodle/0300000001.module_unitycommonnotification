@@ -13,7 +13,7 @@ using Unity.Notifications.Android;
 #endif			// #if UNITY_IOS
 
 /** 알림 관리자 */
-public class CNotiManager : CSingleton<CNotiManager> {
+public partial class CNotiManager : CSingleton<CNotiManager> {
 	/** 콜백 */
 	public enum ECallback {
 		NONE = -1,
