@@ -68,7 +68,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 		CAccess.Assert(a_stParams.m_eImportance != Importance.None);
 #endif			// #if UNITY_IOS
 
-#if UNITY_IOS || UNITY_ANDROID
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 			a_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, true);
@@ -97,7 +97,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 		}
 #else
 		a_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, false);
-#endif			// #if UNITY_IOS || UNITY_ANDROID
+#endif			// #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 	}
 
 	/** 알림을 추가한다 */
