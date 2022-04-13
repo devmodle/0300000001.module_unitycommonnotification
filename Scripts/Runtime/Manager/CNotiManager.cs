@@ -23,20 +23,16 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 
 	/** 매개 변수 */
 	public struct STParams {
-#if UNITY_IOS
-		public PresentationOption m_ePresentOpts;
-		public AuthorizationOption m_eAuthorizationOpts;
-#elif UNITY_ANDROID
-		public Importance m_eImportance;
-#endif			// #if UNITY_IOS
-
 		public Dictionary<ECallback, System.Action<CNotiManager, bool>> m_oCallbackDict;
 	}
 
 	#region 변수
 	private STParams m_stParams;
 
-#if UNITY_ANDROID
+#if UNITY_IOS
+	private PresentationOption m_ePresentationOpts = PresentationOption.Alert | PresentationOption.Sound;
+	private AuthorizationOption m_eAuthorizationOpts = AuthorizationOption.Alert | AuthorizationOption.Badge | AuthorizationOption.Sound;
+#elif UNITY_ANDROID
 	private List<string> m_oNotiGroupIDList = new List<string>();
 #endif			// #if UNITY_ANDROID
 	#endregion			// 변수
@@ -62,12 +58,6 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 	public virtual void Init(STParams a_stParams) {
 		CFunc.ShowLog("CNotiManager.Init", KCDefine.B_LOG_COLOR_PLUGIN);
 
-#if UNITY_IOS
-		CAccess.Assert(a_stParams.m_eAuthorizationOpts.ExIsValidAuthOpts());
-#elif UNITY_ANDROID
-		CAccess.Assert(a_stParams.m_eImportance != Importance.None);
-#endif			// #if UNITY_IOS
-
 #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화 되었을 경우
 		if(this.IsInit) {
@@ -76,7 +66,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 			m_stParams = a_stParams;
 
 #if UNITY_IOS
-			var oRequest = new AuthorizationRequest(a_stParams.m_eAuthorizationOpts, false);
+			var oRequest = new AuthorizationRequest(m_eAuthorizationOpts, false);
 
 			this.ExRepeatCallFunc((a_oSender, a_bIsComplete) => {
 				// 완료 되었을 경우
@@ -89,7 +79,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 #else
 			// 알림 그룹이 없을 경우
 			if(!m_oNotiGroupIDList.Contains(KCDefine.U_GROUP_ID_NOTI)) {
-				this.AddNotiGroup(KCDefine.U_GROUP_ID_NOTI, KCDefine.U_GROUP_N_NOTI, KCDefine.U_GROUP_DESC_NOTI, a_stParams.m_eImportance);
+				this.AddNotiGroup(KCDefine.U_GROUP_ID_NOTI, KCDefine.U_GROUP_N_NOTI, KCDefine.U_GROUP_DESC_NOTI, Importance.Default);
 			}
 
 			this.ExLateCallFunc((a_oSender) => this.OnInit());
@@ -123,13 +113,24 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 				CategoryIdentifier = a_oGroupID,
 				ThreadIdentifier = $"{Thread.CurrentThread.ManagedThreadId}",
 
-				Trigger = this.CreateNotiTrigger(a_stNotiInfo),
-				ShowInForeground = a_stNotiInfo.m_bIsShowForeground,
-				ForegroundPresentationOption = m_stParams.m_ePresentOpts
+				ShowInForeground = false,
+				ForegroundPresentationOption = m_ePresentationOpts,
+
+				Trigger = new iOSNotificationCalendarTrigger() {
+					UtcTime = true,
+					Repeats = a_stNotiInfo.m_bIsRepeat,
+					
+					Year = a_stNotiInfo.m_stNotiTime.ToUniversalTime().Year,
+					Month = a_stNotiInfo.m_stNotiTime.ToUniversalTime().Month,
+					Day = a_stNotiInfo.m_stNotiTime.ToUniversalTime().Day,
+					Hour = a_stNotiInfo.m_stNotiTime.ToUniversalTime().Hour,
+					Minute = a_stNotiInfo.m_stNotiTime.ToUniversalTime().Minute,
+					Second = a_stNotiInfo.m_stNotiTime.ToUniversalTime().Second
+				}
 			});
 #else
 			var oNoti = new AndroidNotification(a_stNotiInfo.m_oTitle, a_stNotiInfo.m_oMsg, a_stNotiInfo.m_stNotiTime);
-			oNoti.RepeatInterval = a_stNotiInfo.m_bIsRepeat ? new System.TimeSpan(KCDefine.B_VAL_1_INT, KCDefine.B_VAL_0_INT, KCDefine.B_VAL_0_INT, KCDefine.B_VAL_0_INT) : null;
+			oNoti.RepeatInterval = a_stNotiInfo.m_bIsRepeat ? new System.TimeSpan(KCDefine.B_VAL_1_INT, KCDefine.B_VAL_0_INT, KCDefine.B_VAL_0_INT, KCDefine.B_VAL_0_INT, KCDefine.B_VAL_0_INT) : null;
 
 			AndroidNotificationCenter.SendNotificationWithExplicitID(oNoti, a_oGroupID, this.MakeNotiID(a_oKey));
 #endif			// #if UNITY_IOS
@@ -172,18 +173,6 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 			m_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, true);
 		});
 	}
-
-#if UNITY_IOS
-	/** 알림 발생자를 생성한다 */
-	private iOSNotificationTrigger CreateNotiTrigger(STNotiInfo a_stNotiInfo) {
-		var stDeltaTime = a_stNotiInfo.m_stNotiTime - System.DateTime.Now;
-		CAccess.Assert(stDeltaTime.ExIsValid());
-
-		return new iOSNotificationTimeIntervalTrigger() {
-			Repeats = a_stNotiInfo.m_bIsRepeat, TimeInterval = stDeltaTime
-		};
-	}
-#endif			// #if UNITY_IOS
 
 #if UNITY_ANDROID
 	/** 알림 그룹을 추가한다 */
