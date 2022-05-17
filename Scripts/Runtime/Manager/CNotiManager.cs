@@ -104,35 +104,9 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 #if UNITY_IOS
-			iOSNotificationCenter.ScheduleNotification(new iOSNotification() {
-				Title = a_stNotiInfo.m_oTitle,
-				Subtitle = a_stNotiInfo.m_oSubTitle,
-				Body = a_stNotiInfo.m_oMsg,
-
-				Identifier = a_oKey,
-				CategoryIdentifier = a_oGroupID,
-				ThreadIdentifier = $"{Thread.CurrentThread.ManagedThreadId}",
-
-				ShowInForeground = false,
-				ForegroundPresentationOption = m_ePresentationOpts,
-
-				Trigger = new iOSNotificationCalendarTrigger() {
-					UtcTime = true,
-					Repeats = a_stNotiInfo.m_bIsRepeat,
-					
-					Year = a_stNotiInfo.m_stNotiTime.ToUniversalTime().Year,
-					Month = a_stNotiInfo.m_stNotiTime.ToUniversalTime().Month,
-					Day = a_stNotiInfo.m_stNotiTime.ToUniversalTime().Day,
-					Hour = a_stNotiInfo.m_stNotiTime.ToUniversalTime().Hour,
-					Minute = a_stNotiInfo.m_stNotiTime.ToUniversalTime().Minute,
-					Second = a_stNotiInfo.m_stNotiTime.ToUniversalTime().Second
-				}
-			});
+			iOSNotificationCenter.ScheduleNotification(this.MakeiOSNoti(a_oKey, a_oGroupID, a_stNotiInfo));
 #else
-			var oNoti = new AndroidNotification(a_stNotiInfo.m_oTitle, a_stNotiInfo.m_oMsg, a_stNotiInfo.m_stNotiTime);
-			oNoti.RepeatInterval = a_stNotiInfo.m_bIsRepeat ? new System.TimeSpan(KCDefine.B_VAL_1_INT, KCDefine.B_VAL_0_INT, KCDefine.B_VAL_0_INT, KCDefine.B_VAL_0_INT, KCDefine.B_VAL_0_INT) : null;
-
-			AndroidNotificationCenter.SendNotificationWithExplicitID(oNoti, a_oGroupID, this.MakeNotiID(a_oKey));
+			AndroidNotificationCenter.SendNotificationWithExplicitID(this.MakeAndroidNoti(a_stNotiInfo), a_oGroupID, this.MakeNotiID(a_oKey));
 #endif			// #if UNITY_IOS
 		}
 #endif			// #if UNITY_IOS || UNITY_ANDROID
@@ -173,6 +147,40 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 			m_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, true);
 		});
 	}
+
+	/** 알림 식별자를 생성한다 */
+	private int MakeNotiID(string a_oKey) {
+		return int.TryParse(a_oKey, out int nNotiID) ? nNotiID : KCDefine.B_VAL_0_INT;
+	}
+
+#if UNITY_IOS
+	/** iOS 알림을 생성한다 */
+	private iOSNotification MakeiOSNoti(string a_oKey, string a_oGroupID, STNotiInfo a_stNotiInfo) {
+		return new iOSNotification($"{this.MakeNotiID(a_oKey)}") {
+			Title = a_stNotiInfo.m_oTitle,
+			Subtitle = a_stNotiInfo.m_oSubTitle,
+			Body = a_stNotiInfo.m_oMsg,
+
+			CategoryIdentifier = a_oGroupID,
+			ThreadIdentifier = $"{Thread.CurrentThread.ManagedThreadId}",
+
+			ShowInForeground = false,
+			ForegroundPresentationOption = m_ePresentationOpts,
+
+			Trigger = new iOSNotificationCalendarTrigger() {
+				UtcTime = true,
+				Repeats = a_stNotiInfo.m_bIsRepeat,
+
+				Year = a_stNotiInfo.m_stNotiTime.ToUniversalTime().Year,
+				Month = a_stNotiInfo.m_stNotiTime.ToUniversalTime().Month,
+				Day = a_stNotiInfo.m_stNotiTime.ToUniversalTime().Day,
+				Hour = a_stNotiInfo.m_stNotiTime.ToUniversalTime().Hour,
+				Minute = a_stNotiInfo.m_stNotiTime.ToUniversalTime().Minute,
+				Second = a_stNotiInfo.m_stNotiTime.ToUniversalTime().Second
+			}
+		};
+	}
+#endif			// #if UNITY_IOS
 
 #if UNITY_ANDROID
 	/** 알림 그룹을 추가한다 */
@@ -231,12 +239,15 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 #endif			// #if MSG_PACK_ENABLE	
 	}
 
-	/** 알림 식별자를 생성한다 */
-	private int MakeNotiID(string a_oKey) {
-		int nID = KCDefine.B_VAL_0_INT;
-		CAccess.Assert(int.TryParse(a_oKey, out nID));
-
-		return nID;
+	/** 안드로이드 알림을 생성한다 */
+	private AndroidNotification MakeAndroidNoti(STNotiInfo a_stNotiInfo) {
+		return new AndroidNotification(a_stNotiInfo.m_oTitle, a_stNotiInfo.m_oMsg, a_stNotiInfo.m_stNotiTime, a_stNotiInfo.m_bIsRepeat ? new System.TimeSpan(KCDefine.B_VAL_1_INT, KCDefine.B_VAL_0_INT, KCDefine.B_VAL_0_INT, KCDefine.B_VAL_0_INT, KCDefine.B_VAL_0_INT) : System.TimeSpan.Zero, KCDefine.U_ICON_N_ANDROID_NOTI_SMALL) {
+			GroupSummary = true,
+			ShouldAutoCancel = true,
+			Style = NotificationStyle.BigTextStyle,
+			GroupAlertBehaviour = GroupAlertBehaviours.GroupAlertSummary,
+			LargeIcon = KCDefine.U_ICON_N_ANDROID_NOTI_LARGE
+		};
 	}
 #endif			// #if UNITY_ANDROID
 #endif			// #if UNITY_IOS || UNITY_ANDROID
