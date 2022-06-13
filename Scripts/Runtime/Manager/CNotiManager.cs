@@ -22,7 +22,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 	}
 
 	/** 매개 변수 */
-	public struct STParams {
+	public partial struct STParams {
 		public Dictionary<ECallback, System.Action<CNotiManager, bool>> m_oCallbackDict;
 	}
 
