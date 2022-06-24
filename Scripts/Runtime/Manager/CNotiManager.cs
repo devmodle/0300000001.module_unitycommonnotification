@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 #if NOTI_MODULE_ENABLE
 #if UNITY_IOS
