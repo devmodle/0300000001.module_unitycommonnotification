@@ -27,13 +27,15 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 		public Dictionary<ECallback, System.Action<CNotiManager, bool>> m_oCallbackDict;
 	}
 
+	#region 상수
+#if UNITY_IOS
+	private const PresentationOption OPTS_PRESENTATION = PresentationOption.Alert | PresentationOption.Sound;
+	private const AuthorizationOption OPTS_AUTHORIZATION = AuthorizationOption.Alert | AuthorizationOption.Badge | AuthorizationOption.Sound;
+#endif			// #if UNITY_IOS
+	#endregion			// 상수
+
 	#region 변수
 	private STParams m_stParams;
-
-#if UNITY_IOS
-	private PresentationOption m_ePresentationOpts = PresentationOption.Alert | PresentationOption.Sound;
-	private AuthorizationOption m_eAuthorizationOpts = AuthorizationOption.Alert | AuthorizationOption.Badge | AuthorizationOption.Sound;
-#endif			// #if UNITY_IOS
 	#endregion			// 변수
 
 	#region 프로퍼티
@@ -53,7 +55,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 			m_stParams = a_stParams;
 
 #if UNITY_IOS
-			var oRequest = new AuthorizationRequest(m_eAuthorizationOpts, false);
+			var oRequest = new AuthorizationRequest(CNotiManager.OPTS_AUTHORIZATION, false);
 
 			this.ExRepeatCallFunc((a_oSender, a_bIsComplete) => {
 				// 완료 되었을 경우
@@ -143,7 +145,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 			ThreadIdentifier = $"{Thread.CurrentThread.ManagedThreadId}",
 
 			ShowInForeground = true,
-			ForegroundPresentationOption = m_ePresentationOpts,
+			ForegroundPresentationOption = CNotiManager.OPTS_PRESENTATION,
 
 			Trigger = new iOSNotificationCalendarTrigger() {
 				UtcTime = true,
