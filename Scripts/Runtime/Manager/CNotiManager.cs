@@ -34,13 +34,6 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 		public Dictionary<ECallback, System.Action<CNotiManager, bool>> m_oCallbackDict;
 	}
 
-	#region 상수
-#if UNITY_IOS
-	private const PresentationOption OPTS_PRESENTATION = PresentationOption.Alert | PresentationOption.Sound;
-	private const AuthorizationOption OPTS_AUTHORIZATION = AuthorizationOption.Alert | AuthorizationOption.Badge | AuthorizationOption.Sound;
-#endif			// #if UNITY_IOS
-	#endregion			// 상수
-
 	#region 변수
 	private STParams m_stParams;
 
@@ -48,6 +41,13 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 		[EKey.IS_INIT] = false
 	};
 	#endregion			// 변수
+
+	#region 상수
+#if UNITY_IOS
+	private const PresentationOption OPTS_PRESENTATION = PresentationOption.Alert | PresentationOption.Sound;
+	private const AuthorizationOption OPTS_AUTHORIZATION = AuthorizationOption.Alert | AuthorizationOption.Badge | AuthorizationOption.Sound;
+#endif			// #if UNITY_IOS
+	#endregion			// 상수
 
 	#region 프로퍼티
 	public bool IsInit => m_oBoolDict[EKey.IS_INIT];
