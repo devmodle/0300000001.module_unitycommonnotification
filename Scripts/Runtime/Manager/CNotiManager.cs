@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 using UnityEngine;
@@ -141,7 +142,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 
 	/** 알림 식별자를 생성한다 */
 	private int MakeNotiID(string a_oKey) {
-		return int.TryParse(a_oKey, out int nNotiID) ? nNotiID : KCDefine.B_VAL_0_INT;
+		return int.TryParse(a_oKey, NumberStyles.Any, null, out int nNotiID) ? nNotiID : KCDefine.B_VAL_0_INT;
 	}
 
 #if UNITY_IOS
