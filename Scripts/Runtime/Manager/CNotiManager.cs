@@ -67,7 +67,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 			m_stParams = a_stParams;
 
 #if UNITY_IOS
-			var oRequest = new AuthorizationRequest(CNotiManager.OPTS_AUTHORIZATION, false);
+			var oRequest = new AuthorizationRequest(OPTS_AUTHORIZATION, false);
 
 			this.ExRepeatCallFunc((a_oSender, a_bIsComplete) => {
 				// 완료 되었을 경우
@@ -157,7 +157,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 			ThreadIdentifier = $"{Thread.CurrentThread.ManagedThreadId}",
 
 			ShowInForeground = true,
-			ForegroundPresentationOption = CNotiManager.OPTS_PRESENTATION,
+			ForegroundPresentationOption = OPTS_PRESENTATION,
 
 			Trigger = new iOSNotificationCalendarTrigger() {
 				UtcTime = true,
