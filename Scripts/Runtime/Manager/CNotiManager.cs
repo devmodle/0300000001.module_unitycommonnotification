@@ -36,8 +36,6 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 	}
 
 	#region 변수
-	private STParams m_stParams;
-
 	private Dictionary<EKey, bool> m_oBoolDict = new Dictionary<EKey, bool>() {
 		[EKey.IS_INIT] = false
 	};
@@ -51,6 +49,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 	#endregion			// 상수
 
 	#region 프로퍼티
+	public STParams Params { get; private set; }
 	public bool IsInit => m_oBoolDict[EKey.IS_INIT];
 	#endregion			// 프로퍼티
 
@@ -64,7 +63,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 		if(m_oBoolDict[EKey.IS_INIT]) {
 			a_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, m_oBoolDict[EKey.IS_INIT]);
 		} else {
-			m_stParams = a_stParams;
+			this.Params = a_stParams;
 
 #if UNITY_IOS
 			var oRequest = new AuthorizationRequest(OPTS_AUTHORIZATION, false);
@@ -136,7 +135,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 #endif			// #if UNITY_IOS
 
 			m_oBoolDict[EKey.IS_INIT] = true;
-			m_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, true);
+			this.Params.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, true);
 		});
 	}
 
