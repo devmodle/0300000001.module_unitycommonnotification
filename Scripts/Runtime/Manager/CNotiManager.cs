@@ -38,14 +38,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 	#region 변수
 	private Dictionary<EKey, bool> m_oBoolDict = new Dictionary<EKey, bool>();
 	#endregion			// 변수
-
-	#region 상수
-#if UNITY_IOS
-	private const PresentationOption OPTS_PRESENTATION = PresentationOption.Alert | PresentationOption.Sound;
-	private const AuthorizationOption OPTS_AUTHORIZATION = AuthorizationOption.Alert | AuthorizationOption.Badge | AuthorizationOption.Sound;
-#endif			// #if UNITY_IOS
-	#endregion			// 상수
-
+	
 	#region 프로퍼티
 	public STParams Params { get; private set; }
 	public bool IsInit => m_oBoolDict.GetValueOrDefault(EKey.IS_INIT);
@@ -64,7 +57,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 			this.Params = a_stParams;
 
 #if UNITY_IOS
-			var oRequest = new AuthorizationRequest(OPTS_AUTHORIZATION, false);
+			var oRequest = new AuthorizationRequest(KCDefine.B_OPTS_AUTHORIZATION, false);
 
 			this.ExRepeatCallFunc((a_oSender, a_bIsComplete) => {
 				// 완료 되었을 경우
@@ -154,7 +147,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 			ThreadIdentifier = $"{Thread.CurrentThread.ManagedThreadId}",
 
 			ShowInForeground = true,
-			ForegroundPresentationOption = OPTS_PRESENTATION,
+			ForegroundPresentationOption = KCDefine.B_OPTS_PRESENTATION,
 
 			Trigger = new iOSNotificationCalendarTrigger() {
 				UtcTime = true,
