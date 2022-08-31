@@ -112,6 +112,15 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 	}
 	#endregion			// 함수
 
+	#region 클래스 함수
+	/** 매개 변수를 생성한다 */
+	public static STParams MakeParams(Dictionary<ECallback, System.Action<CNotiManager, bool>> a_oCallbackDict) {
+		return new STParams() {
+			m_oCallbackDict = a_oCallbackDict
+		};
+	}
+	#endregion			// 클래스 함수
+
 	#region 조건부 함수
 #if UNITY_IOS || UNITY_ANDROID
 	// 초기화 되었을 경우
