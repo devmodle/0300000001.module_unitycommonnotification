@@ -114,9 +114,9 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 
 	#region 클래스 함수
 	/** 매개 변수를 생성한다 */
-	public static STParams MakeParams(Dictionary<ECallback, System.Action<CNotiManager, bool>> a_oCallbackDict) {
+	public static STParams MakeParams(Dictionary<ECallback, System.Action<CNotiManager, bool>> a_oCallbackDict = null) {
 		return new STParams() {
-			m_oCallbackDict = a_oCallbackDict
+			m_oCallbackDict = a_oCallbackDict ?? new Dictionary<ECallback, System.Action<CNotiManager, bool>>()
 		};
 	}
 	#endregion			// 클래스 함수
