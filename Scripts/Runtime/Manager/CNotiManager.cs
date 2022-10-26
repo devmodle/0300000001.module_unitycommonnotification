@@ -1,13 +1,14 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 
 #if NOTI_MODULE_ENABLE
+using System.IO;
+using System.Threading;
+using System.Globalization;
+
 #if UNITY_IOS
 using Unity.Notifications.iOS;
 #elif UNITY_ANDROID
