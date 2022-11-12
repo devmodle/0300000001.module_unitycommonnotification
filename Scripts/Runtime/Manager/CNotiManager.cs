@@ -16,23 +16,27 @@ using Unity.Notifications.Android;
 #endif         // #if UNITY_IOS                          
 
 /** 알림 관리자 */
-public partial class CNotiManager : CSingleton<CNotiManager> {
+public partial class CNotiManager : CSingleton<CNotiManager>
+{
 	/** 식별자 */
-	private enum EKey {
+	private enum EKey
+	{
 		NONE = -1,
 		IS_INIT,
 		[HideInInspector] MAX_VAL
 	}
 
 	/** 콜백 */
-	public enum ECallback {
+	public enum ECallback
+	{
 		NONE = -1,
 		INIT,
 		[HideInInspector] MAX_VAL
 	}
 
 	/** 매개 변수 */
-	public struct STParams {
+	public struct STParams
+	{
 		public Dictionary<ECallback, System.Action<CNotiManager, bool>> m_oCallbackDict;
 	}
 
@@ -47,7 +51,8 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 
 	#region 함수
 	/** 초기화 */
-	public virtual void Init(STParams a_stParams) {
+	public virtual void Init(STParams a_stParams)
+	{
 		CFunc.ShowLog("CNotiManager.Init", KCDefine.B_LOG_COLOR_PLUGIN);
 
 #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
@@ -79,7 +84,8 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 	}
 
 	/** 알림을 추가한다 */
-	public void AddNoti(string a_oKey, STNotiInfo a_stNotiInfo) {
+	public void AddNoti(string a_oKey, STNotiInfo a_stNotiInfo)
+	{
 		CFunc.ShowLog($"CNotiManager.AddNoti: {a_oKey}, {a_stNotiInfo.m_oMsg}, {a_stNotiInfo.m_stNotiTime}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oKey.ExIsValid());
 
@@ -96,7 +102,8 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 	}
 
 	/** 알림을 제거한다 */
-	public void RemoveNoti(string a_oKey) {
+	public void RemoveNoti(string a_oKey)
+	{
 		CFunc.ShowLog($"CNotiManager.RemoveNoti: {a_oKey}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oKey.ExIsValid());
 
@@ -115,8 +122,10 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 
 	#region 클래스 함수
 	/** 매개 변수를 생성한다 */
-	public static STParams MakeParams(Dictionary<ECallback, System.Action<CNotiManager, bool>> a_oCallbackDict = null) {
-		return new STParams() {
+	public static STParams MakeParams(Dictionary<ECallback, System.Action<CNotiManager, bool>> a_oCallbackDict = null)
+	{
+		return new STParams()
+		{
 			m_oCallbackDict = a_oCallbackDict ?? new Dictionary<ECallback, System.Action<CNotiManager, bool>>()
 		};
 	}
