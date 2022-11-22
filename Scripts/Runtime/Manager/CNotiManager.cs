@@ -13,7 +13,7 @@ using System.Globalization;
 using Unity.Notifications.iOS;
 #elif UNITY_ANDROID
 using Unity.Notifications.Android;
-#endif // #if UNITY_IOS                          
+#endif // #if UNITY_IOS
 
 /** 알림 관리자 */
 public partial class CNotiManager : CSingleton<CNotiManager> {
@@ -38,12 +38,12 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 
 	#region 변수
 	private Dictionary<EKey, bool> m_oBoolDict = new Dictionary<EKey, bool>();
-	#endregion // 변수               
+	#endregion // 변수
 
 	#region 프로퍼티
 	public STParams Params { get; private set; }
 	public bool IsInit => m_oBoolDict.GetValueOrDefault(EKey.IS_INIT);
-	#endregion // 프로퍼티                 
+	#endregion // 프로퍼티
 
 	#region 함수
 	/** 초기화 */
@@ -71,7 +71,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 #else
 			AndroidNotificationCenter.RegisterNotificationChannel(new AndroidNotificationChannel(Application.identifier, KCDefine.U_GROUP_N_NOTI, KCDefine.U_GROUP_DESC_NOTI, Importance.Default));
 			this.ExLateCallFunc((a_oSender) => this.OnInit());
-#endif // #if UNITY_IOS                          
+#endif // #if UNITY_IOS
 		}
 #else
 		a_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, false);
@@ -90,9 +90,9 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 			iOSNotificationCenter.ScheduleNotification(this.MakeiOSNoti(a_oKey, a_stNotiInfo));
 #else
 			AndroidNotificationCenter.SendNotificationWithExplicitID(this.MakeAndroidNoti(a_stNotiInfo), Application.identifier, this.MakeNotiID(a_oKey));
-#endif // #if UNITY_IOS                          
+#endif // #if UNITY_IOS
 		}
-#endif // #if UNITY_IOS || UNITY_ANDROID                                           
+#endif // #if UNITY_IOS || UNITY_ANDROID
 	}
 
 	/** 알림을 제거한다 */
@@ -107,11 +107,11 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 			iOSNotificationCenter.RemoveScheduledNotification(a_oKey);
 #else
 			AndroidNotificationCenter.CancelScheduledNotification(this.MakeNotiID(a_oKey));
-#endif // #if UNITY_IOS                          
+#endif // #if UNITY_IOS
 		}
-#endif // #if UNITY_IOS || UNITY_ANDROID                                           
+#endif // #if UNITY_IOS || UNITY_ANDROID
 	}
-	#endregion // 함수               
+	#endregion // 함수
 
 	#region 클래스 함수
 	/** 매개 변수를 생성한다 */
@@ -120,7 +120,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 			m_oCallbackDict = a_oCallbackDict ?? new Dictionary<ECallback, System.Action<CNotiManager, bool>>()
 		};
 	}
-	#endregion // 클래스 함수                   
+	#endregion // 클래스 함수
 
 	#region 조건부 함수
 #if UNITY_IOS || UNITY_ANDROID
@@ -133,7 +133,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 			iOSNotificationCenter.RemoveAllDeliveredNotifications();
 #else
 			AndroidNotificationCenter.CancelAllDisplayedNotifications();
-#endif // #if UNITY_IOS                          
+#endif // #if UNITY_IOS
 
 			m_oBoolDict.ExReplaceVal(EKey.IS_INIT, true);
 			this.Params.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, true);
@@ -172,7 +172,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 			}
 		};
 	}
-#endif // #if UNITY_IOS                          
+#endif // #if UNITY_IOS
 
 #if UNITY_ANDROID
 	/** 안드로이드 알림을 생성한다 */
@@ -187,8 +187,8 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 			LargeIcon = KCDefine.U_ICON_N_ANDROID_NOTI_LARGE
 		};
 	}
-#endif // #if UNITY_ANDROID                              
-#endif // #if UNITY_IOS || UNITY_ANDROID                                           
-	#endregion // 조건부 함수                   
+#endif // #if UNITY_ANDROID
+#endif // #if UNITY_IOS || UNITY_ANDROID
+	#endregion // 조건부 함수
 }
-#endif // #if NOTI_MODULE_ENABLE                                   
+#endif // #if NOTI_MODULE_ENABLE
