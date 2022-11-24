@@ -75,7 +75,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 		}
 #else
 		a_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, false);
-#endif // #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)                                                              
+#endif // #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 	}
 
 	/** 알림을 추가한다 */
