@@ -9,10 +9,10 @@
         "Module.UnityCommonFunc",
         "Module.UnityCommonUtility",
         "Module.UnityCommonExternals",
-        "MessagePack",
-        "MessagePack.Annotations",
         "Unity.Notifications.iOS",
-        "Unity.Notifications.Android"
+        "Unity.Notifications.Android",
+        "MessagePack",
+        "MessagePack.Annotations"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
