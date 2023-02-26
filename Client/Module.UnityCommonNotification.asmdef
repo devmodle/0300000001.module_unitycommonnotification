@@ -1,12 +1,12 @@
 {
-    "name": "Module.UnityCommonNoti",
+    "name": "Module.UnityCommonNotification",
     "rootNamespace": "",
     "references": [
         "Module.UnityCommonDefine",
         "Module.UnityCommonAccess",
         "Module.UnityCommonFactory",
         "Module.UnityCommonExtension",
-        "Module.UnityCommonFunc",
+        "Module.UnityCommonFunction",
         "Module.UnityCommonUtility",
         "Module.UnityCommonExternals",
         "Unity.Notifications.iOS",
