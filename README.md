@@ -1,3 +1,3 @@
-# 0300000001.Module_UnityCommonNoti
+# 0300000001.Module_UnityCommonNotification
 
-Module - UnityCommonNoti 클라이언트 프로젝트
+Module - UnityCommonNotification 프로젝트
