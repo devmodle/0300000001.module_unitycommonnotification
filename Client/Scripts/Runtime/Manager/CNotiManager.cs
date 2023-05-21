@@ -142,9 +142,9 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 	/** iOS 알림을 생성한다 */
 	private iOSNotification MakeiOSNoti(string a_oKey, STNotiInfo a_stNotiInfo) {
 		return new iOSNotification($"{this.MakeNotiID(a_oKey)}") {
+			Body = a_stNotiInfo.m_oMsg,
 			Title = a_stNotiInfo.m_oTitle,
 			Subtitle = a_stNotiInfo.m_oSubTitle,
-			Body = a_stNotiInfo.m_oMsg,
 
 			CategoryIdentifier = Application.identifier,
 			ThreadIdentifier = $"{Thread.CurrentThread.ManagedThreadId}",
