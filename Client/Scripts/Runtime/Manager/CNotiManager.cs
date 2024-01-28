@@ -40,7 +40,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 		CFunc.ShowLog("CNotiManager.Init", KCDefine.B_LOG_COLOR_PLUGIN);
 
 #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
-		// 초기화 되었을 경우
+		// 초기화되었을 경우
 		if(this.IsInit) {
 			a_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, this.IsInit);
 		} else {
@@ -50,7 +50,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 			var oRequest = new AuthorizationRequest(KCDefine.B_OPTS_AUTHORIZATION, false);
 
 			this.ExRepeatCallFunc((a_oSender, a_bIsComplete) => {
-				// 완료 되었을 경우
+				// 완료되었을 경우
 				if(a_bIsComplete) {
 					this.OnInit();
 				}
@@ -73,7 +73,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 		CAccess.Assert(a_oKey.ExIsValid());
 
 #if UNITY_IOS || UNITY_ANDROID
-		// 초기화 되었을 경우
+		// 초기화되었을 경우
 		if(this.IsInit) {
 #if UNITY_IOS
 			iOSNotificationCenter.ScheduleNotification(this.MakeiOSNoti(a_oKey, a_stNotiInfo));
@@ -90,7 +90,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 		CAccess.Assert(a_oKey.ExIsValid());
 
 #if UNITY_IOS || UNITY_ANDROID
-		// 초기화 되었을 경우
+		// 초기화되었을 경우
 		if(this.IsInit) {
 #if UNITY_IOS
 			iOSNotificationCenter.RemoveScheduledNotification(a_oKey);
@@ -104,7 +104,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 
 	#region 조건부 함수
 #if UNITY_IOS || UNITY_ANDROID
-	// 초기화 되었을 경우
+	// 초기화되었을 경우
 	private void OnInit() {
 		CFunc.ShowLog("CNotiManager.OnInit", KCDefine.B_LOG_COLOR_PLUGIN);
 
