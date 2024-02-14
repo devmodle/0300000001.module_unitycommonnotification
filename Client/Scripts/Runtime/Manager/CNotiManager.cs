@@ -56,9 +56,9 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 				}
 				
 				return oRequest != null && !oRequest.IsFinished;
-			}, KCDefine.U_DELTA_T_NOTI_M_REQUEST_CHECK, KCDefine.U_MAX_DELTA_T_NOTI_M_REQUEST_CHECK);
+			}, KCDefine.B_DELTA_T_NOTI_M_REQUEST_CHECK, KCDefine.B_MAX_DELTA_T_NOTI_M_REQUEST_CHECK);
 #else
-			AndroidNotificationCenter.RegisterNotificationChannel(new AndroidNotificationChannel(Application.identifier, KCDefine.U_GROUP_N_NOTI, KCDefine.U_GROUP_DESC_NOTI, Importance.Default));
+			AndroidNotificationCenter.RegisterNotificationChannel(new AndroidNotificationChannel(Application.identifier, KCDefine.B_GROUP_N_NOTI, KCDefine.B_GROUP_DESC_NOTI, Importance.Default));
 			this.ExLateCallFunc((a_oSender) => this.OnInit());
 #endif // #if UNITY_IOS
 		}
@@ -108,7 +108,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 	private void OnInit() {
 		CFunc.ShowLog("CNotiManager.OnInit", KCDefine.B_LOG_COLOR_PLUGIN);
 
-		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_NOTI_M_INIT_CALLBACK, () => {
+		CScheduleManager.Inst.AddCallback(KCDefine.B_KEY_NOTI_M_INIT_CALLBACK, () => {
 #if UNITY_IOS
 			iOSNotificationCenter.RemoveAllDeliveredNotifications();
 #else
