@@ -70,7 +70,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 	/** 알림을 추가한다 */
 	public void AddNoti(string a_oKey, STNotiInfo a_stNotiInfo) {
 		CFunc.ShowLog($"CNotiManager.AddNoti: {a_oKey}, {a_stNotiInfo.m_oMsg}, {a_stNotiInfo.m_stNotiTime}", KCDefine.B_LOG_COLOR_PLUGIN);
-		CAccess.Assert(a_oKey.ExIsValid());
+		CFunc.Assert(a_oKey.ExIsValid());
 
 #if UNITY_IOS || UNITY_ANDROID
 		// 초기화되었을 경우
@@ -87,7 +87,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 	/** 알림을 제거한다 */
 	public void RemoveNoti(string a_oKey) {
 		CFunc.ShowLog($"CNotiManager.RemoveNoti: {a_oKey}", KCDefine.B_LOG_COLOR_PLUGIN);
-		CAccess.Assert(a_oKey.ExIsValid());
+		CFunc.Assert(a_oKey.ExIsValid());
 
 #if UNITY_IOS || UNITY_ANDROID
 		// 초기화되었을 경우
