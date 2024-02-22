@@ -42,7 +42,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화되었을 경우
 		if(this.IsInit) {
-			a_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, this.IsInit);
+			a_stParams.m_oCallbackDict?.ExGetVal(ECallback.INIT)?.Invoke(this, this.IsInit);
 		} else {
 			this.Params = a_stParams;
 
@@ -63,7 +63,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 #endif // #if UNITY_IOS
 		}
 #else
-		a_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, false);
+		a_stParams.m_oCallbackDict?.ExGetVal(ECallback.INIT)?.Invoke(this, false);
 #endif // #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 	}
 
@@ -116,7 +116,7 @@ public partial class CNotiManager : CSingleton<CNotiManager> {
 #endif // #if UNITY_IOS
 
 			this.IsInit = true;
-			this.Params.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, true);
+			this.Params.m_oCallbackDict?.ExGetVal(ECallback.INIT)?.Invoke(this, true);
 		});
 	}
 
